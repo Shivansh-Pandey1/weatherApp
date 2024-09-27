@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false" id="city-input">
+            <button id="search-btn"><img src="dd.png" alt="Search"></button>
+        </div>
+        <div class="weather">
+            <img src="rain.png" class="weather-icon" alt="Weather Icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">Amritsar</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="humidity.png" alt="Humidity Icon">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="wind.png" alt="Wind Speed Icon">
+                    <div>
+                        <p class="wind">50 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apikey = "f8135624eb1b45da584a3821f6c8d06a";
+
+        async function checkWeather(city) {
+            const apiurl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${apikey}`;
+            try {
+                const response = await fetch(apiurl);
+                if (!response.ok) {
+                    throw new Error('City not found'); 
+                }
+                const data = await response.json(); 
+               
+                document.querySelector('.temp').textContent = `${data.main.temp}°C`;
+                document.querySelector('.city').textContent = data.name;
+                document.querySelector('.humidity').textContent = `${data.main.humidity}%`;
+                document.querySelector('.wind').textContent = `${data.wind.speed} km/h`;
+            } catch (error) {
+                console.error(error);
+                alert(error.message); 
+            }
+        }
+
+        const searchbox = document.querySelector("#city-input");
+        const searchbtn = document.querySelector("#search-btn");
+
+        searchbtn.addEventListener("click", () => {
+            const city = searchbox.value; 
+            if (city) {
+                checkWeather(city); 
+            } else {
+                alert("Please enter a city name."); 
+            }
+        });
+    </script>
+</body>
+</html>
